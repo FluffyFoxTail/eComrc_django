@@ -1,4 +1,3 @@
-from lib2to3.pgen2 import token
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -10,13 +9,21 @@ from .models import Product
 
 class UserSerializer(serializers.ModelSerializer):
     is_admin = serializers.SerializerMethodField(read_only=True)
+    name = serializers.SerializerMethodField(read_only=True)
 
     def get_is_admin(self, obj):
         return obj.is_staff
 
+    def get_name(self, obj):
+        name = obj.first_name
+        if name == '':
+            name = obj.email
+
+        return name
+
     class Meta:
         model = User
-        fields = ["id", "username", "email", "is_admin"]
+        fields = ["id", "username", "email", "name", "is_admin"]
 
 
 class UserSerializerWithToken(UserSerializer):
@@ -28,19 +35,18 @@ class UserSerializerWithToken(UserSerializer):
 
     class Meta:
         model = User
-        fields = ["id", "username", "email", "is_admin", "token"]
+        fields = ["id", "username", "email", "name", "is_admin", "token"]
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
+    def validate(self, attrs):
+        data = super().validate(attrs)
 
-        token['id'] = user.id
-        token['name'] = user.username
-        token['email'] = user.email
+        serializer = UserSerializerWithToken(self.user).data
+        for key, value in serializer.items():
+            data[key] = value
 
-        return token
+        return data
 
 
 class ProductSerializer(serializers.ModelSerializer):

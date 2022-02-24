@@ -7,5 +7,6 @@ urlpatterns = [
     path("register/", views.register_user, name="register_user"),
     path('login/', views.CustomTokenObtainPairView.as_view(),
          name='login_with_jwt'),
-    path("profile/", views.get_user_profile, name="userInfo"),
+    path("profile/", views.get_user_profile, name="get_user_info"),
+    path("update/", views.update_user_profile, name="updaate_user_info"),
 ]
