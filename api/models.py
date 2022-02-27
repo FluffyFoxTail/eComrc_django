@@ -56,7 +56,7 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=200, null=True, blank=True)
     count = models.IntegerField(null=True, blank=True, default=0)
-    # image = models.CharField(max_length=200, null=True, blank=True)
+    image = models.CharField(max_length=200, null=True, blank=True)
     price = models.DecimalField(
         max_digits=7, decimal_places=2, null=True, blank=True)
 
