@@ -8,5 +8,5 @@ urlpatterns = [
     path('login/', views.CustomTokenObtainPairView.as_view(),
          name='login_with_jwt'),
     path("profile/", views.get_user_profile, name="get_user_info"),
-    path("update/", views.update_user_profile, name="updaate_user_info"),
+    path("profile/update/", views.update_user_profile, name="updaate_user_info"),
 ]
