@@ -22,7 +22,7 @@ def register_user(request):
         )
         serializer = UserSerializerWithToken(user, many=False)
 
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
     except:
         message = {"detail": "user with this email is already exist"}
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
@@ -33,7 +33,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
+@permission_classes((IsAuthenticated,))
 def get_user_profile(request):
     user = request.user
     serializer = UserSerializer(user, many=False)
@@ -41,7 +41,7 @@ def get_user_profile(request):
 
 
 @api_view(["PUT"])
-@permission_classes([IsAuthenticated])
+@permission_classes((IsAuthenticated,))
 def update_user_profile(request):
     user = request.user
     serializer = UserSerializerWithToken(user, many=False)
@@ -59,7 +59,7 @@ def update_user_profile(request):
 
 
 @api_view(["GET"])
-@permission_classes([IsAdminUser])
+@permission_classes((IsAdminUser,))
 def get_users(request):
     users = User.objects.all()
     serializer = UserSerializer(users, many=True)

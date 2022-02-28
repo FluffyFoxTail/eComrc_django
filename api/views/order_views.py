@@ -1,5 +1,3 @@
-from email.mime import image
-from itertools import product
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -10,7 +8,7 @@ from api.serializers import OrderSerializer
 
 
 @api_view(["POST"])
-@permission_classes([IsAuthenticated])
+@permission_classes((IsAuthenticated,))
 def addOrderItems(request):
     user = request.user
     data = request.data
@@ -48,4 +46,4 @@ def addOrderItems(request):
         product.available -= ordered_item["count"]
 
     serializer = OrderSerializer(order, many=False)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)

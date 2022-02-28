@@ -1,4 +1,5 @@
 from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.decorators import api_view
 
 from api.models import Product
@@ -70,7 +71,7 @@ def create_product(request):
         available=data['available'],
     )
     serializer = ProductSerializer(product, many=False)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 @api_view(["PUT"])
@@ -89,4 +90,4 @@ def update_product(request, pk):
 def delete_product(request, pk):
     product = Product.objects.get(id=pk)
     product.delete()
-    return Response("Product was deleted")
+    return Response("Product was deleted", status=status.HTTP_204_NO_CONTENT)
