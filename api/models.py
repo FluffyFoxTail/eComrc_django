@@ -20,6 +20,11 @@ class Product(models.Model):
     def __str__(self) -> str:
         return str(self.name)
 
+    class Meta:
+        verbose_name = "Product"
+        verbose_name_plural = "Products"
+        ordering = ["-created_at", "rating"]
+
 
 class Review(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
@@ -29,7 +34,7 @@ class Review(models.Model):
     comment = models.TextField(null=True, blank=True)
 
     def __str__(self) -> str:
-        return f'{self.name} got {self.rating} rating'
+        return str(f'{self.name} got {self.rating} rating')
 
 
 class Order(models.Model):
@@ -49,11 +54,16 @@ class Order(models.Model):
         auto_now_add=False, null=True, blank=True)
 
     def __str__(self) -> str:
-        return f' order from {self.user} was made at {self.created_at}'
+        return str(f' order from {self.user} was made at {self.created_at}')
+
+    class Meta:
+        verbose_name = "Order"
+        verbose_name_plural = "Orders"
+        ordering = ["-created_at"]
 
 
 class OrderItem(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=200, null=True, blank=True)
     count = models.IntegerField(null=True, blank=True, default=0)
@@ -62,7 +72,7 @@ class OrderItem(models.Model):
         max_digits=7, decimal_places=2, null=True, blank=True)
 
     def __str__(self) -> str:
-        return self.name
+        return str(self.name)
 
 
 class DeliveryAddress(models.Model):
@@ -76,4 +86,4 @@ class DeliveryAddress(models.Model):
         max_digits=7, decimal_places=2, null=True, blank=True)
 
     def __str__(self) -> str:
-        return self.address
+        return str(self.address)
